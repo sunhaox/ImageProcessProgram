@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "multiPicTosinglePic", "multiPicTosinglePic\multiPicTosinglePic.vcxproj", "{C0F8E7C4-7FFB-41A0-9192-A4B17FF57098}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "binToMatToPcd", "binToMatToPcd\binToMatToPcd.vcxproj", "{D3CF3529-0198-4B52-B747-83DD903EFEF0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "csvToMat", "csvToMat\csvToMat.vcxproj", "{E1E43250-2052-4B3B-ACEE-67821713B9A1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0F8E7C4-7FFB-41A0-9192-A4B17FF57098}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C0F8E7C4-7FFB-41A0-9192-A4B17FF57098}.Debug|Win32.Build.0 = Debug|Win32
+		{C0F8E7C4-7FFB-41A0-9192-A4B17FF57098}.Release|Win32.ActiveCfg = Release|Win32
+		{C0F8E7C4-7FFB-41A0-9192-A4B17FF57098}.Release|Win32.Build.0 = Release|Win32
+		{D3CF3529-0198-4B52-B747-83DD903EFEF0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D3CF3529-0198-4B52-B747-83DD903EFEF0}.Debug|Win32.Build.0 = Debug|Win32
+		{D3CF3529-0198-4B52-B747-83DD903EFEF0}.Release|Win32.ActiveCfg = Release|Win32
+		{D3CF3529-0198-4B52-B747-83DD903EFEF0}.Release|Win32.Build.0 = Release|Win32
+		{E1E43250-2052-4B3B-ACEE-67821713B9A1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E1E43250-2052-4B3B-ACEE-67821713B9A1}.Debug|Win32.Build.0 = Debug|Win32
+		{E1E43250-2052-4B3B-ACEE-67821713B9A1}.Release|Win32.ActiveCfg = Release|Win32
+		{E1E43250-2052-4B3B-ACEE-67821713B9A1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
