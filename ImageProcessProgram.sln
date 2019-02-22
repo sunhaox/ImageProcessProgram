@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "csvToMat", "csvToMat\csvToM
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "colorPngToPcd", "colorPngToPcd\colorPngToPcd.vcxproj", "{58572BB2-DD8B-4EA7-A19D-5E860BAD7D69}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "depthPngToColorMap", "depthPngToColorMap\depthPngToColorMap.vcxproj", "{D418C9C1-9929-4451-AC0E-FF1C99B557C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,6 +35,10 @@ Global
 		{58572BB2-DD8B-4EA7-A19D-5E860BAD7D69}.Debug|Win32.Build.0 = Debug|Win32
 		{58572BB2-DD8B-4EA7-A19D-5E860BAD7D69}.Release|Win32.ActiveCfg = Release|Win32
 		{58572BB2-DD8B-4EA7-A19D-5E860BAD7D69}.Release|Win32.Build.0 = Release|Win32
+		{D418C9C1-9929-4451-AC0E-FF1C99B557C6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D418C9C1-9929-4451-AC0E-FF1C99B557C6}.Debug|Win32.Build.0 = Debug|Win32
+		{D418C9C1-9929-4451-AC0E-FF1C99B557C6}.Release|Win32.ActiveCfg = Release|Win32
+		{D418C9C1-9929-4451-AC0E-FF1C99B557C6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
