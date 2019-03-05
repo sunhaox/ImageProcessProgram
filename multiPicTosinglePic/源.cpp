@@ -21,13 +21,25 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2\highgui\highgui.hpp>
 
+
 using namespace std;
 using namespace cv;
 
 
+//原始图像位置
+#define FILEDIR		"D:\\样本\\公交数据20190228\\2019-0228(6)\\"
 // 分割后的图片保存位置
-#define FILEDIRNEW	"D:\\公交采集\\restore\\rst\\"
-#define FILEDIR		"D:\\公交采集\\restore\\data"
+#define FILEDIRNEW	"E:\\公交采集0228\\2019-0228(6)\\"
+//开始文件名称 "NULL"从头开始
+#define START_FILE_NAME	"NULL"
+//保存彩色图像 0不保存
+#define SAVE_COLORMAP 1
+//保存深度图像 0不保存
+#define SAVE_DEPTH    1
+//间隔显示帧数 0不显示
+#define SHOW_NUM 0
+//每幅图像内包含的帧数
+#define PIC_NUM 30
 
 
 int number = 0;
@@ -40,39 +52,76 @@ void imageCut(char* dir, char* file)
 	strcpy(fileDirNew, FILEDIRNEW);
 
 	strcpy(fileDir, dir);		//合成文件目录
-	strcat(fileDir, "\\");
 	strcat(fileDir, file);
 
-	Mat ori = imread(fileDir, CV_LOAD_IMAGE_ANYCOLOR | CV_LOAD_IMAGE_ANYDEPTH);
+	Mat ori;
+	try{
+		ori = imread(fileDir, CV_LOAD_IMAGE_ANYCOLOR | CV_LOAD_IMAGE_ANYDEPTH);
+	}
+	catch (exception e)
+	{
+		sprintf("Can not open %s%s!\n", dir, file);
+		return;
+	}
+	//检查图片文件
+	if (ori.size().width == 0 || ori.size().height == 0)
+	{
+		printf("Open %s%s error!\n", dir, file);
+		return;
+	}
 
 	Mat depth = Mat(Size(640, 480), CV_16U);
-	for (int k = 0; k < 30; k++)
+	MatConstIterator_<ushort> it = ori.begin<ushort>();
+	for (int k = 0; k < PIC_NUM; k++)
 	{
 		for (int i = 0; i < 480; i++)
 		{
 			for (int j = 0; j < 640; j++)
 			{
-				depth.at<ushort>(i, j) = ori.at<ushort>(k, i * 640 + j);
+				//depth.at<ushort>(i, j) = ori.at<ushort>(k, i * 640 + j);
+				depth.at<ushort>(i, j) = *(it++);
 			}
 		}
-		//显示伪彩色图片
+
 		Mat colorMat;
-		depth.convertTo(colorMat, CV_8U, 1.0 / 16, 0);
-		applyColorMap(colorMat, colorMat, COLORMAP_JET);	  //将mImageDepth变成看似的深度图(伪彩色图)
-		imshow("win", colorMat);
-		waitKey(1);
-		//保存结果文件名
 		char imgFile[200];
-		sprintf(imgFile, "%s%06d.png", fileDirNew, number++);
-		imwrite(imgFile, depth);
+		//显示伪彩色图片
+		if (SHOW_NUM != 0 && number % SHOW_NUM == 0)
+		{
+			if (colorMat.size().height == 0)
+			{
+				depth.convertTo(colorMat, CV_8U, 1.0 / 16, 0);
+				applyColorMap(colorMat, colorMat, COLORMAP_JET);	  //将mImageDepth变成看似的深度图(伪彩色图)
+			}
+			imshow("win", colorMat);
+			waitKey(1);
+		}
+		if (SAVE_COLORMAP)
+		{
+			if (colorMat.size().height == 0)
+			{
+				depth.convertTo(colorMat, CV_8U, 1.0 / 16, 0);
+				applyColorMap(colorMat, colorMat, COLORMAP_JET);	  //将mImageDepth变成看似的深度图(伪彩色图)
+			}
+			sprintf(imgFile, "%scolor-%06d.png", fileDirNew, number);
+			imwrite(imgFile, colorMat);
+		}
+		if (SAVE_DEPTH)
+		{
+			//保存结果文件名
+			sprintf(imgFile, "%s%06d.png", fileDirNew, number);
+			imwrite(imgFile, depth);
+		}
+		number++;
 	}
 }
 
 void listFiles(const char * dir)
 {
+	int saveflag = 0;
 	char dirNew[200];
 	strcpy(dirNew, dir);
-	strcat(dirNew, "\\*.*");    // 在目录后面加上"\\*.*"进行第一次搜索
+	strcat(dirNew, "*.*");    // 在目录后面加上"\\*.*"进行第一次搜索
 
 	intptr_t handle;
 	_finddata_t findData;
@@ -92,15 +141,28 @@ void listFiles(const char * dir)
 
 			// 在目录后面加上"\\"和搜索到的目录名进行下一次搜索
 			strcpy(dirNew, dir);
-			strcat(dirNew, "\\");
 			strcat(dirNew, findData.name);
+			strcat(dirNew, "\\");
 
 			listFiles(dirNew);
 		}
 		else
 		{
-			strcpy(dirNew, dir);
-			imageCut(dirNew, findData.name);
+			//判断起始文件
+			if (!strcmp(findData.name,START_FILE_NAME))
+			{
+				saveflag = 1;
+			}
+			if (!strcmp("NULL", START_FILE_NAME))
+				saveflag = 1;
+		
+
+			//处理文件
+			if (saveflag)
+			{
+				strcpy(dirNew, dir);
+				imageCut(dirNew, findData.name);
+			}
 			cout << findData.name << "\t" << findData.size << " bytes.\n";
 		}
 	} while (_findnext(handle, &findData) == 0);
