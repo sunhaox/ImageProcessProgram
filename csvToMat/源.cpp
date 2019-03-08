@@ -22,20 +22,32 @@
 #include <stdio.h>
 #include <pcl\visualization\cloud_viewer.h>
 
+
+//读取文件路径
+#define FILEDIR		"D:\\pcd\\csv\\"
+//保存文件路径
+#define FILEDIRNEW	"D:\\pcd\\pcd\\"
+
+
 #define   Img_width   (320)
 #define   Img_height  (240)
-#define   FX  286.6034
-#define   FY  287.3857	
-#define   CX  176.2039
-#define   CY  126.5788	
-#define   K1  -0.12346
-#define   K2  0.159423
+#define   FX  196.638316
+#define   FY  197.0980708
+#define   CX  167.7838572
+#define   CY  124.3448776
+#define   K1  -0.289046233
+#define   K2  0.091629024
 #define   THRESHOLD	   3000
 
 #define   LEFT_BLANK	0
 #define	  RIGHT_BLANK	0
 #define	  TOP_BLANK		0
 #define   BOTTOM_BLANK	0
+
+#define   IMAGE_SAVE	0
+#define   IMAGE_SHOW    0
+#define   CLOUD_SAVE	1
+#define   CLOUD_SHOW	0
 
 
 using namespace std;
@@ -44,10 +56,7 @@ using namespace pcl;
 
 
 
-//读取文件路径
-#define FILEDIR		"D:\\VS\\csvToMat\\csv\\"
-//保存文件路径
-#define FILEDIRNEW	"D:\\VS\\csvToMat\\pcd\\"
+
 
 
 
@@ -156,10 +165,18 @@ void pcdSave(Mat mImageDepth, char* saveFile)
 	{
 		for (int j = 0; j < imgWidth; j++)
 		{
+			if (mImageDepth.at<ushort>(i, j) > 30000)
+				continue;
+
+			if (mImageDepth.at<ushort>(i, j) < 10)
+				continue;
+
 			float picDist = sqrt((i - imgHeight / 2.0)*(i - imgHeight / 2.0) + (j - imgWidth / 2.0)*(j - imgWidth / 2.0));	//图像上点到中心的像素点个数
 			float picAngle = atan2(i - imgHeight / 2.0, j - imgWidth / 2.0);												//图像上x,y和中心点角度关系
 			float angle = atan(sqrt((j - imgWidth / 2.0)*(j - imgWidth / 2.0) / FX / FX + (i - imgHeight / 2.0)*(i - imgHeight / 2.0) / FY / FY));
 			float dist = mImageDepth.at<ushort>(i, j) / 3000.0 * 125;				//原始图像深度
+
+			
 
 			PointXYZ p;
 			p.z = dist*cos(angle);									//坐标变换后的深度
@@ -170,21 +187,28 @@ void pcdSave(Mat mImageDepth, char* saveFile)
 		}
 	}
 
-	//点云可视化
-	/*PointCloud<PointXYZ>::Ptr cloud = pointCloud.makeShared();
-	visualization::CloudViewer viewer("Cloud Viewer");
-	viewer.showCloud(cloud);
-	while (!viewer.wasStopped())
+	if (CLOUD_SHOW)
 	{
+		//点云可视化
+		PointCloud<PointXYZ>::Ptr cloud = pointCloud.makeShared();
+		visualization::CloudViewer viewer("Cloud Viewer");
+		viewer.showCloud(cloud);
+		while (!viewer.wasStopped())
+		{
 
-	}*/
+		}
+	}
+	
 
-
-	//保存点云
-	pointCloud.height = 1;
-	pointCloud.width = pointCloud.size();
-	io::savePCDFileBinary(saveFile, pointCloud);		//二进制保存
-	//io::savePCDFile(saveFile, pointCloud);				//ASCII保存
+	if (CLOUD_SAVE)
+	{
+		//保存点云
+		pointCloud.height = 1;
+		pointCloud.width = pointCloud.size();
+		io::savePCDFileBinary(saveFile, pointCloud);		//二进制保存
+		//io::savePCDFile(saveFile, pointCloud);				//ASCII保存
+	}
+	
 }
 
 //提取全路径中的文件后缀）
@@ -283,9 +307,23 @@ void imageConvert(char* dir, char* file)
 					}
 				}
 
-				//图像保存
-				//sprintf(fileDirNew, "%s%s-%d.png", FILEDIRNEW, file, frameCounter);
-				//imwrite(fileDirNew, src_1);
+				if (IMAGE_SAVE)
+				{
+					//图像保存
+					sprintf(fileDirNew, "%s%s-%d.png", FILEDIRNEW, file, frameCounter);
+					imwrite(fileDirNew, src_1);
+				}
+				if (IMAGE_SHOW)
+				{
+					//伪彩色显示
+					Mat color;
+					src_1.convertTo(color, CV_8U);
+					applyColorMap(color, color, COLORMAP_JET);
+					imshow("win", color);
+
+					waitKey(1);
+				}
+					
 
 				sprintf(fileDirNew, "%s%s-%d.pcd", FILEDIRNEW, file, frameCounter);
 				//畸变矫正

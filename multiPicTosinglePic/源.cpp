@@ -27,9 +27,9 @@ using namespace cv;
 
 
 //原始图像位置
-#define FILEDIR		"D:\\样本\\公交数据20190228\\2019-0228(6)\\"
+#define FILEDIR		"D:\\样本\\公交数据20190228\\2019-0228(9)\\"
 // 分割后的图片保存位置
-#define FILEDIRNEW	"E:\\公交采集0228\\2019-0228(6)\\"
+#define FILEDIRNEW	"E:\\公交采集0228\\2019-0228(9)\\"
 //开始文件名称 "NULL"从头开始
 #define START_FILE_NAME	"NULL"
 //保存彩色图像 0不保存
