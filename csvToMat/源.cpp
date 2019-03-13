@@ -23,6 +23,8 @@
 #include <pcl\visualization\cloud_viewer.h>
 
 
+//输入是文件 0 文件夹 1
+#define IS_FILE_OR_DIR		1
 //读取文件路径
 #define FILEDIR		"D:\\pcd\\csv\\"
 //保存文件路径
@@ -46,7 +48,7 @@
 
 #define   IMAGE_SAVE	0
 #define   IMAGE_SHOW    0
-#define   CLOUD_SAVE	1
+#define   CLOUD_SAVE	0
 #define   CLOUD_SHOW	0
 
 
@@ -172,7 +174,7 @@ void pcdSave(Mat mImageDepth, char* saveFile)
 				continue;
 
 			float picDist = sqrt((i - imgHeight / 2.0)*(i - imgHeight / 2.0) + (j - imgWidth / 2.0)*(j - imgWidth / 2.0));	//图像上点到中心的像素点个数
-			float picAngle = atan2(i - imgHeight / 2.0, j - imgWidth / 2.0);												//图像上x,y和中心点角度关系
+			float picAngle = atan2(FX*(i - imgHeight / 2.0), FY*(j - imgWidth / 2.0));												//图像上x,y和中心点角度关系
 			float angle = atan(sqrt((j - imgWidth / 2.0)*(j - imgWidth / 2.0) / FX / FX + (i - imgHeight / 2.0)*(i - imgHeight / 2.0) / FY / FY));
 			float dist = mImageDepth.at<ushort>(i, j) / 3000.0 * 125;				//原始图像深度
 
@@ -234,7 +236,8 @@ void imageConvert(char* dir, char* file)
 	strcpy(fileDirNew, FILEDIRNEW);
 
 	strcpy(fileDir, dir);
-	strcat(fileDir, file);
+	if (IS_FILE_OR_DIR)
+		strcat(fileDir, file);
 
 	//打开文件
 	FILE *p_openFile = NULL;
@@ -339,7 +342,8 @@ void listFiles(const char * dir)
 {
 	char dirNew[200];
 	strcpy(dirNew, dir);
-	strcat(dirNew, "*.*");    // 在目录后面加上"\\*.*"进行第一次搜索
+	if (IS_FILE_OR_DIR)
+		strcat(dirNew, "*.*");    // 在目录后面加上"\\*.*"进行第一次搜索
 
 	intptr_t handle;
 	_finddata_t findData;
